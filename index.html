@@ -2,17 +2,34 @@
 <html lang="zh-Hant">
 <head>
   <meta charset="utf-8">
-  <!-- 一載入就立即跳轉（備援用） -->
-  <meta http-equiv="refresh" content="0; url=https://microncorp.sharepoint.com/:fl:/g/contentstorage/x8FNO-xtskuCRX2_fMTHLe4CkVOx0xxLtjw5SVmncYI/ET7_Mf4mzGVAkv0Y7egbYN4B_lpKVHhoCD72g67ebO9yVw" />
-  <script>
-    // 主要跳轉：一執行就替換當前頁面
-    window.location.replace("https://microncorp.sharepoint.com/:fl:/g/contentstorage/x8FNO-xtskuCRX2_fMTHLe4CkVOx0xxLtjw5SVmncYI/ET7_Mf4mzGVAkv0Y7egbYN4B_lpKVHhoCD72g67ebO9yVw");
-  </script>
   <title>Redirecting…</title>
-  <!-- 隱藏所有內容防止短暫閃爍 -->
+  <script>
+    (function() {
+      // 你的 Loop 深層網址
+      const targetUrl = "https://microncorp.sharepoint.com/:fl:/g/contentstorage/x8FNO-xtskuCRX2_fMTHLe4CkVOx0xxLtjw5SVmncYI/ET7_Mf4mzGVAkv0Y7egbYN4B_lpKVHhoCD72g67ebO9yVw";
+      // AAD WS-Fed 被動登入端點
+      const wsFedEndpoint = "https://login.microsoftonline.com/common/wsfed";
+      // 租戶根 realm（必須帶尾 /）
+      const wtrealm = "https://microncorp.sharepoint.com/";
+      // 解析 URL 的 query string
+      const params = new URLSearchParams(window.location.search);
+      if (!params.has("postLogin")) {
+        // 第一次進入 → 呼叫 AAD 登入，登入完回到這裡並帶 postLogin=1
+        const landingUrl = window.location.origin + window.location.pathname + "?postLogin=1";
+        const loginUrl = wsFedEndpoint +
+          "?wa=wsignin1.0" +
+          "&wtrealm=" + encodeURIComponent(wtrealm) +
+          "&wreply=" + encodeURIComponent(landingUrl);
+        window.location.replace(loginUrl);
+      } else {
+        // 登入已完成 → 直接跳轉到 Loop 深層頁
+        window.location.replace(targetUrl);
+      }
+    })();
+  </script>
+  <!-- CSS 隱藏所有內容，避免短暫閃爍 -->
   <style>html,body{height:0;margin:0;overflow:hidden}</style>
 </head>
 <body>
-<!-- 空白，不提供任何手動點擊選項 -->
 </body>
 </html>
